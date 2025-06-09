@@ -1,6 +1,5 @@
 const express = require('express');
 const db = require('../config/database');
-const { where } = require('sequelize');
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -77,6 +76,34 @@ router.put("/:id", async (req, res) => {
                 Id: req.params.id
             }
         });
+
+        res.status(204).send();
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal server error"
+        });
+    }
+});
+
+router.delete("/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const person = await db.Person.findByPk(id);
+        if (!person) {
+            res.status(404).json({
+                statusCode: 404,
+                message: "Person not found"
+            });
+        }
+
+        await db.Person.destroy({
+            where: {
+                Id: id
+            }
+        })
 
         res.status(204).send();
     }
