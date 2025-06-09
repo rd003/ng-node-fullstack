@@ -1,6 +1,8 @@
 const express = require('express');
 const db = require('../config/database');
 const router = express.Router();
+const { validatePerson, validatePersonUpdate } = require('../middleware/validation');
+
 
 router.get("/", async (req, res) => {
     try {
@@ -36,7 +38,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validatePerson, async (req, res) => {
     try {
         const personData = {
             FirstName: req.body.firstName,
@@ -55,7 +57,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", validatePersonUpdate, async (req, res) => {
     try {
         const existingPerson = await db.Person.findByPk(req.params.id);
 

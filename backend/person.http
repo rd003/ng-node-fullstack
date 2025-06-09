@@ -10,17 +10,17 @@ POST {{base_address}}
 Content-Type: application/json
 
 {
-    "firstName" :"Ravindra",
-    "lastName": "Devrani"
+    "firstName" :"Mahendra",
+    "lastName": "Singh"
 }
 
 ###
-PUT {{base_address}}/6
+PUT {{base_address}}/9
 Content-Type: application/json
 
 {
-    "firstName" :"Amrendra",
-    "lastName": "Bahubully"
+    "firstName" :"",
+    "lastName": "Singh"
 }
 
 ###
