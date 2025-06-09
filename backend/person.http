@@ -3,7 +3,7 @@
 GET {{base_address}}
 
 ###
-GET {{base_address}}/6
+GET {{base_address}}/9
 
 ###
 POST {{base_address}}
@@ -19,7 +19,7 @@ PUT {{base_address}}/9
 Content-Type: application/json
 
 {
-    "firstName" :"",
+    "firstName" :"Lily",
     "lastName": "Singh"
 }
 

@@ -27,7 +27,7 @@ const validatePerson = (req, res, next) => {
 }
 
 const validatePersonUpdate = (req, res, next) => {
-    const updateSchema = personSchema.fork(['FirstName', 'LastName'], (schema) => schema.optional());
+    const updateSchema = personSchema.fork(['firstName', 'lastName'], (schema) => schema.optional());
     const { error } = updateSchema.validate(req.body);
 
     if (error) {
