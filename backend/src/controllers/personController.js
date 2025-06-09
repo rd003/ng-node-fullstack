@@ -1,12 +1,12 @@
 const express = require('express');
-const db = require('../config/database');
+const { Person } = require('../config/database');
 const router = express.Router();
 const { validatePerson, validatePersonUpdate } = require('../middleware/validation');
 
 
 router.get("/", async (req, res) => {
     try {
-        const people = await db.Person.findAll();
+        const people = await Person.findAll();
         res.json(people);
     }
     catch (error) {
@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-        const person = await db.Person.findByPk(req.params.id);
+        const person = await Person.findByPk(req.params.id);
         if (!person) {
             res.status(404).json({
                 statusCode: 404,
@@ -44,7 +44,7 @@ router.post("/", validatePerson, async (req, res) => {
             FirstName: req.body.firstName,
             LastName: req.body.lastName
         };
-        var createdPerson = await db.Person.create(personData);
+        var createdPerson = await Person.create(personData);
         res.status(201)
             .json(createdPerson);
     } catch (error) {
@@ -59,7 +59,7 @@ router.post("/", validatePerson, async (req, res) => {
 
 router.put("/:id", validatePersonUpdate, async (req, res) => {
     try {
-        const existingPerson = await db.Person.findByPk(req.params.id);
+        const existingPerson = await Person.findByPk(req.params.id);
 
         if (!existingPerson) {
             res.status(404).json({
@@ -73,7 +73,7 @@ router.put("/:id", validatePersonUpdate, async (req, res) => {
             LastName: req.body.lastName
         };
 
-        await db.Person.update(personToUpdate, {
+        await Person.update(personToUpdate, {
             where: {
                 Id: req.params.id
             }
@@ -93,7 +93,7 @@ router.put("/:id", validatePersonUpdate, async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
         const id = req.params.id;
-        const person = await db.Person.findByPk(id);
+        const person = await Person.findByPk(id);
         if (!person) {
             res.status(404).json({
                 statusCode: 404,
@@ -101,7 +101,7 @@ router.delete("/:id", async (req, res) => {
             });
         }
 
-        await db.Person.destroy({
+        await Person.destroy({
             where: {
                 Id: id
             }

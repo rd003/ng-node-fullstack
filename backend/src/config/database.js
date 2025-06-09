@@ -20,8 +20,8 @@ const sequelize = new Sequelize(
 );
 
 const db = {};
+db.Sequelize = sequelize;
 db.Person = personModel(sequelize);
-// sync all models with database
-sequelize.sync({ alter: true });
+
 
 module.exports = db;
