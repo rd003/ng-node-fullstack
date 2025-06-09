@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../config/database');
+const { where } = require('sequelize');
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -11,7 +12,7 @@ router.get("/", async (req, res) => {
         console.log(error);
         res.status(500).json({
             statusCode: 500,
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 });
@@ -22,7 +23,7 @@ router.get("/:id", async (req, res) => {
         if (!person) {
             res.status(404).json({
                 statusCode: 404,
-                error: "Person does not found"
+                message: "Person does not found"
             })
         }
         res.json(person);
@@ -31,7 +32,7 @@ router.get("/:id", async (req, res) => {
         console.log(error);
         res.status(500).json({
             statusCode: 500,
-            error: "Internal server error"
+            message: "Internal server error"
         });
     }
 });
@@ -50,8 +51,41 @@ router.post("/", async (req, res) => {
         res.status(500)
             .json({
                 statusCode: 500,
-                error: "Internal server error"
+                message: "Internal server error"
             });
+    }
+});
+
+router.put("/:id", async (req, res) => {
+    try {
+        const existingPerson = await db.Person.findByPk(req.params.id);
+
+        if (!existingPerson) {
+            res.status(404).json({
+                statusCode: 404,
+                message: "Person does not found."
+            });
+        }
+
+        const personToUpdate = {
+            FirstName: req.body.firstName,
+            LastName: req.body.lastName
+        };
+
+        await db.Person.update(personToUpdate, {
+            where: {
+                Id: req.params.id
+            }
+        });
+
+        res.status(204).send();
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal server error"
+        });
     }
 });
 
