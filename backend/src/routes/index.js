@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const personRoutes = require('./personRoutes');
+const userRoutes = require('./user.routes');
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -14,6 +15,7 @@ router.get('/health', (req, res) => {
 
 // API routes
 router.use('/api/people', personRoutes);
+router.use('/api/auth', userRoutes);
 
 // 404 handler for undefined routes
 router.use((req, res) => {

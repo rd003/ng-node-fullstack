@@ -1,6 +1,7 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
-const personModel = require('../models/Person')
+const personModel = require('../models/Person');
+const userModel = require('../models/User');
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,
@@ -22,6 +23,6 @@ const sequelize = new Sequelize(
 const db = {};
 db.Sequelize = sequelize;
 db.Person = personModel(sequelize);
-
+db.Users = userModel(sequelize);
 
 module.exports = db;
