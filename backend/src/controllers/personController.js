@@ -99,11 +99,8 @@ class PersonController {
                 });
             }
 
-            await Person.destroy({
-                where: {
-                    Id: id
-                }
-            })
+            person.destroy();
+            person.save();
 
             res.status(204).send();
         }
