@@ -1,10 +1,10 @@
-const { Person } = require('../config/database');
+const { Sequelize } = require('../config/database');
 
 class PersonController {
 
     getAllPeople = async (req, res) => {
         try {
-            const people = await Person.findAll();
+            const [people] = await Sequelize.query("select Id,FirstName,LastName from People");
             res.json(people);
         }
         catch (error) {
@@ -18,14 +18,17 @@ class PersonController {
 
     getPersonById = async (req, res) => {
         try {
-            const person = await Person.findByPk(req.params.id);
-            if (!person) {
-                res.status(404).json({
+            const people = await Sequelize.query("select Id,FirstName,LastName from People where Id=?", {
+                replacements: [req.params.id],
+                type: Sequelize.QueryTypes.SELECT
+            });
+            if (people.length === 0) {
+                return res.status(404).json({
                     statusCode: 404,
                     message: "Person does not found"
                 })
             }
-            res.json(person);
+            res.json(people[0]);
         }
         catch (error) {
             console.log(error);
@@ -38,11 +41,14 @@ class PersonController {
 
     createPerson = async (req, res) => {
         try {
-            const personData = {
-                FirstName: req.body.firstName,
-                LastName: req.body.lastName
-            };
-            var createdPerson = await Person.create(personData);
+            const sql = `insert into People (FirstName,LastName)
+        values (?,?); select SCOPE_IDENTITY() as id;`;
+            const [result] = await Sequelize.query(sql, {
+                replacements: [req.body.firstName, req.body.lastName],
+                type: Sequelize.QueryTypes.INSERT
+            });
+
+            const createdPerson = { id: result[0].id, ...req.body };
             res.status(201)
                 .json(createdPerson);
         } catch (error) {
@@ -57,26 +63,26 @@ class PersonController {
 
     updatePerson = async (req, res) => {
         try {
-            const existingPerson = await Person.findByPk(req.params.id);
-
-            if (!existingPerson) {
-                res.status(404).json({
+            const [result] = await Sequelize.query(`
+                 select 
+                 case when exists(select 1 from People where Id=?) 
+                 then 1 
+                 else 0 end as personExists
+                `, {
+                replacements: [req.params.id],
+                type: Sequelize.QueryTypes.SELECT
+            });
+            if (!result.personExists) {
+                return res.status(404).json({
                     statusCode: 404,
                     message: "Person does not found."
                 });
             }
-
-            const personToUpdate = {
-                FirstName: req.body.firstName,
-                LastName: req.body.lastName
-            };
-
-            await Person.update(personToUpdate, {
-                where: {
-                    Id: req.params.id
-                }
+            await Sequelize.query(`update People set FirstName=?, LastName=?
+                 where Id=?`, {
+                replacements: [req.body.firstName, req.body.lastName, req.params.id],
+                type: Sequelize.QueryTypes.UPDATE
             });
-
             res.status(204).send();
         }
         catch (error) {
@@ -90,20 +96,26 @@ class PersonController {
 
     deletePerson = async (req, res) => {
         try {
-            const id = req.params.id;
-            const person = await Person.findByPk(id);
-            if (!person) {
-                res.status(404).json({
+            const sql = `select 
+            case when exists (
+            select 1 from People where Id=?
+            ) then 1 else 0 end as personExists`;
+
+            const [result] = await Sequelize.query(sql, {
+                replacements: [req.params.id],
+                type: Sequelize.QueryTypes.SELECT
+            });
+            if (!result.personExists) {
+                return res.status(404).json({
                     statusCode: 404,
                     message: "Person not found"
                 });
             }
 
-            await Person.destroy({
-                where: {
-                    Id: id
-                }
-            })
+            await Sequelize.query(`delete from People where Id=?`, {
+                replacements: [req.params.id],
+                type: Sequelize.QueryTypes.DELETE
+            });
 
             res.status(204).send();
         }
