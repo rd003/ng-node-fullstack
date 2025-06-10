@@ -3,15 +3,15 @@
 GET {{base_address}}
 
 ###
-GET {{base_address}}/9
+GET {{base_address}}/3
 
 ###
 POST {{base_address}}
 Content-Type: application/json
 
 {
-    "firstName" :"Mahendra",
-    "lastName": "Singh"
+    "firstName" :"John",
+    "lastName": "Doe"
 }
 
 ###
