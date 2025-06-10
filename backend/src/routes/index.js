@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const personRoutes = require('../controllers/personController');
+const personRoutes = require('./personRoutes');
 
 // Health check endpoint
 router.get('/health', (req, res) => {
