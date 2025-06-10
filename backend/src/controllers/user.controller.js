@@ -42,7 +42,7 @@ class UserController {
 
     async login(req, res) {
         try {
-            const user = await Users.findOne({ where: { email: req.username } });
+            const user = await Users.findOne({ where: { email: req.body.username } });
             console.log(`======> user: ${JSON.stringify(user)}`);
             if (user === null) {
                 return res.status(401).json({
@@ -51,7 +51,7 @@ class UserController {
                 });
             }
 
-            const isMatch = await bcrypt.compare(req.password, hash);
+            const isMatch = await bcrypt.compare(req.body.password, user.PasswordHash);
 
             if (!isMatch) {
                 return res.status(401).json({
@@ -65,7 +65,11 @@ class UserController {
             })
         }
         catch (error) {
-            console.log(`=====> ${error}`);
+            console.log(`❌=====>${error}`);
+            return res.status(500).json({
+                statusCode: 500,
+                message: "Internal server error"
+            });
         }
     }
 }
