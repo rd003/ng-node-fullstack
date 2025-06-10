@@ -1,6 +1,11 @@
 const { Users } = require('../config/database');
 const bcrypt = require('bcrypt');
 
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Use a strong secret in production
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
+
 class UserController {
     async signup(req, res) {
         try {
@@ -26,14 +31,16 @@ class UserController {
                 PasswordHash: passwordHash,
                 Role: "user"
             });
-            return res.status(201).send({
+
+            const token = jwt
+            res.status(201).send({
                 statusCode: 201,
                 message: "User is created"
             });
         }
         catch (error) {
             console.log(`❌=====>${error}`);
-            return res.status(500).json({
+            res.status(500).json({
                 statusCode: 500,
                 message: "Internal server error"
             });
@@ -43,7 +50,7 @@ class UserController {
     async login(req, res) {
         try {
             const user = await Users.findOne({ where: { email: req.body.username } });
-            console.log(`======> user: ${JSON.stringify(user)}`);
+            //  console.log(`======> user: ${JSON.stringify(user)}`);
             if (user === null) {
                 return res.status(401).json({
                     statusCode: 401,
@@ -60,8 +67,17 @@ class UserController {
                 });
             }
 
+            const payload = {
+                username: user.Email,
+                role: user.Role
+            };
+
+            const token = jwt.sign(payload, JWT_SECRET, {
+                expiresIn: JWT_EXPIRES_IN
+            });
+
             res.json({
-                "access_token": "some_token"
+                "access_token": token
             })
         }
         catch (error) {
