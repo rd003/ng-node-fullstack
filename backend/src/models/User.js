@@ -10,11 +10,14 @@ function userModel(sequelize) {
         },
         Email: {
             type: DataTypes.STRING(100),
-            allowNull: false,
-            unique: true
+            allowNull: false
         },
         PasswordHash: {
             type: DataTypes.STRING(200),
+            allowNull: false
+        },
+        Role: {
+            type: DataTypes.STRING(20),
             allowNull: false
         }
     };
@@ -22,6 +25,13 @@ function userModel(sequelize) {
     const options = {
         freezeTableName: true,
         timestamps: false,
+        indexes: [
+            {
+                unique: true,
+                fields: ['Email'],
+                name: 'idx_users_email_unique'
+            }
+        ]
     };
 
     return sequelize.define("Users", attributes, options);

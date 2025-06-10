@@ -4,6 +4,6 @@ POST {{base_address}}/signup
 Content-Type : application/json
 
 {
-    "email": "john@xyz.co",
-    "password": "John@123"
+    "email": "jack@example.com",
+    "password": "Jack@123"
 }
