@@ -25,6 +25,19 @@ const userSchema = Joi.object({
         })
 });
 
+const loginSchema = Joi.object({
+    username: Joi.string()
+        .min(1)
+        .max(100)
+        .required(),
+    password: Joi.string()
+        .min(1)
+        .max(70)
+        .required()
+});
+
+
+
 const validateUser = (req, res, next) => {
     const { error } = userSchema.validate(req.body);
 
@@ -39,6 +52,20 @@ const validateUser = (req, res, next) => {
     next();
 }
 
+const validateLogin = (req, res, next) => {
+    const { error } = loginSchema.validate(req.body);
+
+    if (error) {
+        res.status(400)
+            .json({
+                statusCode: 400,
+                message: "Validation failed",
+                errors: error.details.map(detail => detail.message)
+            });
+    }
+    next();
+}
 module.exports = {
-    validateUser
+    validateUser,
+    validateLogin
 }
