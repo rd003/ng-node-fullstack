@@ -10,7 +10,8 @@ function userModel(sequelize) {
         },
         Email: {
             type: DataTypes.STRING(100),
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         PasswordHash: {
             type: DataTypes.STRING(200),

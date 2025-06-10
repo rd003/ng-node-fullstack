@@ -5,13 +5,13 @@ class UserController {
     async signup(req, res) {
         try {
             console.log(`====> ${req.body}`);
-            // const saltRounds = 10;
-            // bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
-            //     Users.create({
-            //         Email: req.body.email,
-            //         PasswordHash: hash
-            //     });
-            // });
+            const saltRounds = 10;
+            bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+                Users.create({
+                    Email: req.body.email,
+                    PasswordHash: hash
+                });
+            });
             res.status(201).send();
         }
         catch (error) {
