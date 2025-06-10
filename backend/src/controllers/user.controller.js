@@ -8,7 +8,7 @@ class UserController {
             // const saltRounds = 10;
             // bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
             //     Users.create({
-            //         UserName: req.body.username,
+            //         Email: req.body.email,
             //         PasswordHash: hash
             //     });
             // });
