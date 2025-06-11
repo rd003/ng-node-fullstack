@@ -1,6 +1,8 @@
 @base_address = http://localhost:3000/api/people
+@jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphY2tAZXhhbXBsZS5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc0OTYyNDEwMCwiZXhwIjoxNzQ5NzEwNTAwfQ.N7uEzIL5L40aPA9_ckhHZUs1JiipdT0OdhwEjFF87hw
 
 GET {{base_address}}
+Authorization: Bearer {{jwt}}
 
 ###
 GET {{base_address}}/13

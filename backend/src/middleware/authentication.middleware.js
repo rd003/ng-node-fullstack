@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export const authenticateToken = (req, res, next) => {
+const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     console.log(`======> authHeader: ${JSON.stringify(authHeader)}`);
-    const token = authHeader && authHeader.split(' ')[1];
-    console.log(`======> ${token}`);
+    const token = authHeader?.split(' ')[1];
+    console.log(`======> jwt: ${token}`);
 
     if (!token) {
         return res.status(401).json({
@@ -23,12 +23,12 @@ export const authenticateToken = (req, res, next) => {
         }
         console.log(`=====> JWT verified =>  req.user : ${JSON.stringify(user)} `);
         req.user = user;
-        next();
     })
+    next();
 }
 
 // Middleware to check specific roles
-const requireRole = (allowedRoles) => {
+const requiredRoles = (allowedRoles) => {
     return (req, res, next) => {
         if (!req.user) {
             return res.status(401).json({
@@ -50,6 +50,6 @@ const requireRole = (allowedRoles) => {
 
 module.exports = {
     authenticateToken,
-    requireRole
+    requiredRoles
 }
 

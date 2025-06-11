@@ -19,7 +19,8 @@ const connectDb = async () => {
         console.log('✅ Database connection established successfully.');
 
         if (process.env.NODE_ENV !== 'production') {
-            await Sequelize.sync({ alter: true });
+            // await Sequelize.sync({ alter: true });
+            await Sequelize.sync();
             console.log('📊 Database models synchronized.');
         }
     }

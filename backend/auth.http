@@ -4,8 +4,8 @@ POST {{base_address}}/signup
 Content-Type : application/json
 
 {
-    "email": "jack@example.com",
-    "password": "Jack@123"
+    "email": "john@example.com",
+    "password": "John@123"
 }
 
 ###
@@ -13,6 +13,6 @@ POST {{base_address}}/login
 Content-Type : application/json
 
 {
-    "username": "john@example.com",
-    "password": "John@123"
+    "username": "jack@example.com",
+    "password": "Jack@123"
 }

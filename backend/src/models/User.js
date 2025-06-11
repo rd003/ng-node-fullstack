@@ -29,7 +29,7 @@ function userModel(sequelize) {
             {
                 unique: true,
                 fields: ['Email'],
-                name: 'idx_users_email_unique'
+                name: 'UIX_Email'
             }
         ]
     };
