@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const { convertToMilliseconds } = require('../utils/time.util');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { where } = require('sequelize');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Use a strong secret in production
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '15m';
 const REFRESH_EXPIRY = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
@@ -94,6 +93,8 @@ const login = async (req, res) => {
 
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiry = new Date(Date.now() + convertToMilliseconds(REFRESH_EXPIRY));
+
+        // TODO: Why is it saved as `2025-06-11 15:45:43.1320000 +00:00` while current date in my chrome browser is `Wed Jun 11 2025 21:12:14 GMT+0530 (India Standard Time)`
         user.save();
 
         // set token in cookie
@@ -125,15 +126,26 @@ const login = async (req, res) => {
 // logout 
 const logout = async (req, res) => {
     try {
+        // removing refresh token from db
+
+        // First we need to get username/email, which can be obtained from req.user, which has been set in authentication middleware. Since it is an authenticated route, so we can access req.user
+
+        const username = req.user.username;
+
+        const user = await Users.findOne({
+            where: {
+                Email: username
+            }
+        });
+
+        user.RefreshToken = null;
+        user.RefreshTokenExpiry = null;
+        user.save();
+
         const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // set true for production
         }
-
-        // TODO: remove refresh token from User's table
-        // How do I get user.Email or id. 
-        // JWT payload `username` contains `email`
-        // we have set req.User in authentication middleware, let's check is it available? Since this route is protected
 
         res.status(200)
             .clearCookie("accessToken", cookieOptions)
@@ -163,17 +175,29 @@ const refreshAccessToken = async (req, res) => {
             });
         }
 
-        // find user
-        // TODO: thre should be a better way to find a user. Is it a common practice in node js? 
+        let decodedJwt;
+        try {
+            decodedJwt = jwt.verify(existingRefreshToken, JWT_SECRET);
+            console.log("====> decoded jwt: " + JSON.stringify(decodedJwt));
+        } catch (error) {
+            console.log(`=====> ${error}`);
+            // TODO : getting error: JsonWebTokenError: jwt malformed
+            return res.status(401).json({
+                statusCode: 401,
+                message: 'Invalid refresh token'
+            });
+        }
+
 
         const user = await Users.findOne({
             where: {
+                Email: decodedJwt.username,
                 RefreshToken: existingRefreshToken
             }
         });
 
         // if user is not exists (enters wrong refresh token) or token is expired
-        if (!user || user?.RefreshTokenExpiry < Date.now()) {
+        if (!user || user.RefreshTokenExpiry < Date.now()) {
             return res.status(400).json({
                 statusCode: 400,
                 message: 'Refresh token is expired, so you must logged in'
@@ -188,6 +212,11 @@ const refreshAccessToken = async (req, res) => {
         });
 
         // set tokens in cookie and also return them in response
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // set true for production
+            maxAge: convertToMilliseconds(JWT_EXPIRES_IN)
+        }
         res
             .status(200)
             .cookie("accessToken", accessToken, cookieOptions)

@@ -19,6 +19,13 @@ Content-Type : application/json
 
 ###
 POST {{base_address}}/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NTc1MjMsImV4cCI6MTc0OTY1NzU4M30.Istn6hH4pi_Fjyf1Q07UEs89Q4hIv44veSMUg1gWM_g
 
 ### Refresh token
-POST {{base_address}}/logout
+POST {{base_address}}/refresh
+Content-Type: application/json
+
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NTg3MjAsImV4cCI6MTc0OTY1ODc4MH0.KE3o_gSeaR4CNRCcpUBM0fiModvMHWpSot16B_45JHs",
+  "refreshToken": "3302f0790623bd1703540a81a6042b9c15346db31110e593a430dcfe170f2cdb5e39bd776ff245db3baf308e0d9f6ba3befaa883bdf8232ea2a733ef6fcf1bc1"
+}
