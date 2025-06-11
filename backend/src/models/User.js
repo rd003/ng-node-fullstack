@@ -1,3 +1,4 @@
+const { allow } = require('joi');
 const { DataTypes } = require('sequelize');
 
 function userModel(sequelize) {
@@ -19,6 +20,14 @@ function userModel(sequelize) {
         Role: {
             type: DataTypes.STRING(20),
             allowNull: false
+        },
+        RefreshToken: {
+            type: DataTypes.STRING(200),
+            allowNull: true
+        },
+        RefreshTokenExpiry: {
+            type: DataTypes.DATE,
+            allowNull: true
         }
     };
 

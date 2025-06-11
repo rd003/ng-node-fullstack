@@ -2,11 +2,28 @@ const { Users } = require('../config/database');
 const bcrypt = require('bcrypt');
 const { convertToMilliseconds } = require('../utils/time.util');
 const jwt = require('jsonwebtoken');
+const { where } = require('sequelize');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Use a strong secret in production
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '15m';
 
 class UserController {
+
+    generateRefreshToken() {
+        return crypto.randomBytes(64).toString('hex');
+    }
+
+    // Generate token pair
+    generateTokens(payload) {
+        const accessToken = jwt.sign(payload, JWT_SECRET, {
+            expiresIn: JWT_EXPIRES_IN
+        });
+
+        const refreshToken = this.generateRefreshToken();
+
+        return { accessToken, refreshToken };
+    }
+
     async signup(req, res) {
         try {
             // console.log(`====> req.body: ${JSON.stringify(req.body)}`);
@@ -71,12 +88,14 @@ class UserController {
                 role: user.Role
             };
 
-            const accessToken = jwt.sign(payload, JWT_SECRET, {
-                expiresIn: JWT_EXPIRES_IN
-            });
+            const { accessToken, refreshToken } = this.generateTokens(payload);
+
+            // save refresh token to db
+
+            user.RefreshToken = refreshToken;
+            user.save();
 
             // set token in cookie
-
             const cookieOptions = {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production', // set true for production
@@ -86,8 +105,10 @@ class UserController {
             res
                 .status(200)
                 .cookie("accessToken", accessToken, cookieOptions)
+                .cookie("refreshToken", refreshToken, cookieOptions)
                 .json({
-                    "accessToken": accessToken
+                    "accessToken": accessToken,
+                    "refreshToken": refreshToken
                 })
         }
         catch (error) {
