@@ -48,7 +48,7 @@ class PersonController {
                 type: Sequelize.QueryTypes.SELECT
             });
             // console.log("====>" + JSON.stringify(result));
-            const createdPerson = { id: result[0].id, ...req.body };
+            const createdPerson = { id: result.id, ...req.body };
             res.status(201)
                 .json(createdPerson);
         } catch (error) {

@@ -1,6 +1,6 @@
 const { Users } = require('../config/database');
 const bcrypt = require('bcrypt');
-
+const { convertToMilliseconds } = require('../utils/time.util');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Use a strong secret in production
@@ -32,7 +32,6 @@ class UserController {
                 Role: "user"
             });
 
-            const token = jwt
             res.status(201).send({
                 statusCode: 201,
                 message: "User is created"
@@ -72,13 +71,24 @@ class UserController {
                 role: user.Role
             };
 
-            const token = jwt.sign(payload, JWT_SECRET, {
+            const accessToken = jwt.sign(payload, JWT_SECRET, {
                 expiresIn: JWT_EXPIRES_IN
             });
 
-            res.json({
-                "access_token": token
-            })
+            // set token in cookie
+
+            const cookieOptions = {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production', // set true for production
+                maxAge: convertToMilliseconds(JWT_EXPIRES_IN)
+            }
+
+            res
+                .status(200)
+                .cookie("accessToken", accessToken, cookieOptions)
+                .json({
+                    "accessToken": accessToken
+                })
         }
         catch (error) {
             console.log(`❌=====>${error}`);
@@ -87,6 +97,18 @@ class UserController {
                 message: "Internal server error"
             });
         }
+    }
+
+    async logout() {
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // set true for production
+        }
+        res.status(200)
+            .clearCookie("accessToken", accessToken, cookieOptions)
+            .json({
+                "accessToken": accessToken
+            })
     }
 }
 

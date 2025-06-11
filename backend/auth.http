@@ -13,6 +13,6 @@ POST {{base_address}}/login
 Content-Type : application/json
 
 {
-    "username": "jack@example.com",
-    "password": "Jack@123"
+    "username": "john@example.com",
+    "password": "John@123"
 }

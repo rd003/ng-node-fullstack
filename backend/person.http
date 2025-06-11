@@ -1,15 +1,17 @@
 @base_address = http://localhost:3000/api/people
-@jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphY2tAZXhhbXBsZS5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc0OTYyNDEwMCwiZXhwIjoxNzQ5NzEwNTAwfQ.N7uEzIL5L40aPA9_ckhHZUs1JiipdT0OdhwEjFF87hw
+@jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2MjQ5MzAsImV4cCI6MTc0OTcxMTMzMH0.O42bQEky5Vrw9xhfnZawnbRtgQq-vgnFQMOqMjhzWQQ
 
 GET {{base_address}}
 Authorization: Bearer {{jwt}}
 
 ###
-GET {{base_address}}/13
+GET {{base_address}}/4
+Authorization: Bearer {{jwt}}
 
 ###
 POST {{base_address}}
 Content-Type: application/json
+Authorization: Bearer {{jwt}}
 
 {
     "firstName" :"Johny",
@@ -17,14 +19,16 @@ Content-Type: application/json
 }
 
 ###
-PUT {{base_address}}/13
+PUT {{base_address}}/4
 Content-Type: application/json
+Authorization: Bearer {{jwt}}
 
 {
-    "firstName" :"Johny",
-    "lastName": "sins"
+    "firstName" :"Mahesh",
+    "lastName": "Kumar"
 }
 
 ###
-DELETE  {{base_address}}/13
+DELETE  {{base_address}}/5
+Authorization: Bearer {{jwt}}
 Content-Type: application/json
