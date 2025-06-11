@@ -9,3 +9,5 @@ const asyncHandler = (fn) => async (req, res, next) => {
         })
     }
 }
+
+module.exports = asyncHandler;

@@ -16,3 +16,9 @@ Content-Type : application/json
     "username": "john@example.com",
     "password": "John@123"
 }
+
+###
+POST {{base_address}}/logout
+
+### Refresh token
+POST {{base_address}}/logout
