@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [ReactiveFormsModule],
   template: `
     <div class="container d-flex justify-content-center align-items-center center-container">
     <div class="card p-4 shadow" style="min-width: 300px; max-width: 400px; width: 100%;">
@@ -30,5 +31,5 @@ import { Component } from '@angular/core';
   ]
 })
 export class LoginComponent {
-
+  fb = inject(FormBuilder)
 }
