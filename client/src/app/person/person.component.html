@@ -1,0 +1,46 @@
+<h3>People</h3>
+
+<!-- form -->
+<div class="mb-3">
+    <form class="row g-2 align-items-center">
+        <div class="col-auto">
+            <input type="text" class="form-control" placeholder="First Name" name="firstName" required>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control" placeholder="Last Name" name="lastName" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+        <div class="col-auto">
+            <button type="reset" class="btn btn-secondary">Reset</button>
+        </div>
+    </form>
+</div>
+
+<!-- people list -->
+<div class="people-list" style="width:80%">
+    <table class="table table-sriped">
+        <thead>
+            <tr>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for(i of [1,2,3,4]; track i)
+            {
+            <tr>
+                <td>FirstName {{i}}</td>
+                <td>LastName {{i}}</td>
+                <td style="display: flex; gap:5px">
+                    <a href="" class="btn btn-info">✏️</a>
+                    <a href="" class="btn btn-danger">🗑️</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

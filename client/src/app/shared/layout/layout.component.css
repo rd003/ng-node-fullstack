@@ -1,0 +1,41 @@
+ body {
+     min-height: 100vh;
+     display: flex;
+     flex-direction: column;
+     margin: 0;
+ }
+
+ .wrapper {
+     display: flex;
+     flex: 1;
+     overflow: hidden;
+ }
+
+ .sidebar {
+     width: 250px;
+     background-color: #343a40;
+     color: white;
+     flex-shrink: 0;
+     padding: 1rem;
+     height: 100vh;
+     position: sticky;
+     top: 0;
+ }
+
+ .sidebar a {
+     color: #adb5bd;
+     display: block;
+     padding: 0.5rem 0;
+     text-decoration: none;
+ }
+
+ .sidebar a:hover {
+     color: white;
+ }
+
+ .content {
+     flex: 1;
+     padding: 2rem;
+     background-color: #f8f9fa;
+     overflow-y: auto;
+ }
