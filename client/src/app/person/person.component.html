@@ -2,18 +2,43 @@
 
 <!-- form -->
 <div class="mb-3">
-    <form class="row g-2 align-items-center">
+    <form class="row g-2 align-items-center" [formGroup]="personForm" (ngSubmit)="onSubmit()">
+        <input type="hidden" formControlName="id">
+
         <div class="col-auto">
-            <input type="text" class="form-control" placeholder="First Name" name="firstName" required>
+            <input type="text" class="form-control" formControlName="firstName" placeholder="First Name"
+                name="firstName" required>
+            @if(f.firstName.touched || (f.firstName.dirty && f.firstName.invalid))
+            {
+            <span class="text-danger">
+                @if(f.firstName?.errors?.['required']){
+                FirstName is required
+                }
+                @if (f.firstName?.errors?.['maxlength']) {
+                Maximum 30 characters allowed
+                }
+            </span>
+            }
         </div>
         <div class="col-auto">
-            <input type="text" class="form-control" placeholder="Last Name" name="lastName" required>
+            <input type="text" class="form-control" placeholder="Last Name" formControlName="lastName" required>
+            @if(f.lastName.touched || (f.lastName.dirty && f.lastName.invalid)){
+            <span class="text-danger">
+                @if(f.lastName?.errors?.['required']){
+                LastName is required
+                }
+                @if (f.lastName?.errors?.['maxlength']) {
+                Maximum 30 characters allowed
+                }
+            </span>
+            }
+
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary" [disabled]="personForm.invalid">Save</button>
         </div>
         <div class="col-auto">
-            <button type="reset" class="btn btn-secondary">Reset</button>
+            <button type="reset" class="btn btn-secondary" (click)="onCancel()">Reset</button>
         </div>
     </form>
 </div>
@@ -36,8 +61,8 @@
                 <td>FirstName {{i}}</td>
                 <td>LastName {{i}}</td>
                 <td style="display: flex; gap:5px">
-                    <a href="" class="btn btn-info">✏️</a>
-                    <a href="" class="btn btn-danger">🗑️</a>
+                    <a class="btn btn-info" (click)="onEdit($event)">✏️</a>
+                    <a class="btn btn-danger" (click)="onDelete($event)">🗑️</a>
                 </td>
             </tr>
             }
