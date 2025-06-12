@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -8,16 +8,16 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
     <div class="container d-flex justify-content-center align-items-center center-container">
     <div class="card p-4 shadow" style="min-width: 300px; max-width: 400px; width: 100%;">
       <h4 class="text-center mb-4">Login</h4>
-      <form>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="mb-3">
-          <label for="email" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="email" placeholder="Enter email" required />
+          <label for="username" class="form-label" >Username</label>
+          <input formControlName="username" class="form-control" placeholder="Enter username" required />
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Password" required />
+          <input formControlName="password" type="password" class="form-control" id="password" placeholder="Password" required />
         </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">Login</button>
       </form>
     </div>
   </div>
@@ -31,5 +31,18 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
   ]
 })
 export class LoginComponent {
-  fb = inject(FormBuilder)
+  fb = inject(FormBuilder);
+
+  get f() {
+    return this.loginForm.controls;
+  }
+
+  loginForm = this.fb.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+  })
+
+  onSubmit() {
+
+  }
 }
