@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const { convertToMilliseconds } = require('../utils/time.util');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { Console } = require('console');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Use a strong secret in production
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '15m';
 const REFRESH_EXPIRY = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
@@ -10,12 +11,10 @@ const REFRESH_EXPIRY = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
 
 const signup = async (req, res) => {
     try {
-        // console.log(`====> req.body: ${JSON.stringify(req.body)}`);
         // whether user exists
         const user = await Users.findOne({
             where: { email: req.body.email }
         });
-        // console.log(`====>user: ${JSON.stringify(user)}`);
         if (user) {
             return res.status(409).json({
                 statusCode: 409,
@@ -65,7 +64,6 @@ const generateTokens = (payload) => {
 const login = async (req, res) => {
     try {
         const user = await Users.findOne({ where: { email: req.body.username } });
-        //  console.log(`======> user: ${JSON.stringify(user)}`);
         if (user === null) {
             return res.status(401).json({
                 statusCode: 401,
@@ -94,7 +92,6 @@ const login = async (req, res) => {
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiry = new Date(Date.now() + convertToMilliseconds(REFRESH_EXPIRY));
 
-        // TODO: Why is it saved as `2025-06-11 15:45:43.1320000 +00:00` while current date in my chrome browser is `Wed Jun 11 2025 21:12:14 GMT+0530 (India Standard Time)`
         user.save();
 
         // set token in cookie
@@ -167,21 +164,28 @@ const logout = async (req, res) => {
 const refreshAccessToken = async (req, res) => {
     try {
         const existingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
+        const existingAccessToken = req.cookies.accessToken || req.body.accessToken;
 
-        if (!existingRefreshToken) {
+        if (!existingRefreshToken || existingRefreshToken.trim() === '') {
             return res.status(401).json({
                 statusCode: 401,
-                message: 'Refresh token not provided'
+                message: 'refreshToken is not provided'
             });
         }
 
+        if (!existingAccessToken || existingAccessToken.trim() === '') {
+            return res.status(401).json({
+                statusCode: 401,
+                message: 'accessToken is not provided'
+            });
+        }
+
+        // return immediately if token is invalid
         let decodedJwt;
         try {
-            decodedJwt = jwt.verify(existingRefreshToken, JWT_SECRET);
-            console.log("====> decoded jwt: " + JSON.stringify(decodedJwt));
+            decodedJwt = jwt.verify(existingAccessToken, JWT_SECRET);
         } catch (error) {
             console.log(`=====> ${error}`);
-            // TODO : getting error: JsonWebTokenError: jwt malformed
             return res.status(401).json({
                 statusCode: 401,
                 message: 'Invalid refresh token'
@@ -196,13 +200,15 @@ const refreshAccessToken = async (req, res) => {
             }
         });
 
-        // if user is not exists (enters wrong refresh token) or token is expired
+        // if user is not exists or pass a wrong refresh token or token is expired
         if (!user || user.RefreshTokenExpiry < Date.now()) {
             return res.status(400).json({
                 statusCode: 400,
                 message: 'Refresh token is expired, so you must logged in'
             });
         }
+
+        console.log(`db date: ${user.RefreshTokenExpiry}, currentDate: ${Date.now()}`);
 
         // else generate new access token and refresh token
 
@@ -224,9 +230,7 @@ const refreshAccessToken = async (req, res) => {
             .json({
                 "accessToken": accessToken,
                 "refreshToken": refreshToken
-            })
-
-
+            });
     } catch (error) {
         console.log(`❌=====>${error}`);
         return res.status(500).json({
