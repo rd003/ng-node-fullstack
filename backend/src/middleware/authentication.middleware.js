@@ -2,9 +2,6 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const authenticateToken = (req, res, next) => {
-    // const authHeader = req.headers['authorization'];
-    // console.log(`======> authHeader: ${JSON.stringify(authHeader)}`);
-    // const token = authHeader?.split(' ')[1];
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
     console.log(`======> jwt: ${token}`);
 

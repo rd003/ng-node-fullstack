@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const { convertToMilliseconds } = require('../utils/time.util');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { Console } = require('console');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Use a strong secret in production
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '15m';
 const REFRESH_EXPIRY = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
