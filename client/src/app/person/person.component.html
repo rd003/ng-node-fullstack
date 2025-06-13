@@ -1,11 +1,11 @@
 <h3>People</h3>
-{{state().loading}}
+
 @if(state().loading){
 Loading....
 }
 
 @if(state().error){
-<span class="alert alert-danger">Something went wrong!</span>
+<div class="alert alert-danger">Something went wrong!</div>
 }
 
 <!-- form -->
@@ -66,8 +66,8 @@ Loading....
             @for(person of state().people; track person.id)
             {
             <tr>
-                <td>FirstName {{person.firstName}}</td>
-                <td>LastName {{person.lastName}}</td>
+                <td> {{person.firstName}}</td>
+                <td> {{person.lastName}}</td>
                 <td style="display: flex; gap:5px">
                     <a class="btn btn-info" (click)="onEdit(person)">✏️</a>
                     <a class="btn btn-danger" (click)="onDelete(person)">🗑️</a>

@@ -24,7 +24,7 @@ export class PersonService {
         return this.http.put<void>(`${this.apiUrl}/${person.id}`, person);
     }
 
-    post(person: PersonModel) {
+    add(person: PersonModel) {
         return this.http.post<PersonModel>(this.apiUrl, person);
     }
 }

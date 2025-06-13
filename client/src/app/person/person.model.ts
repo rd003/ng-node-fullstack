@@ -1,5 +1,5 @@
 export interface PersonModel {
-    id: string,
+    id: number,
     firstName: string,
     lastName: string,
 }
