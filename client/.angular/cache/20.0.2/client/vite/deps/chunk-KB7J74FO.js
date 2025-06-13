@@ -1,6 +1,6 @@
 import {
   withHttpTransferCache
-} from "./chunk-2KUZYYLJ.js";
+} from "./chunk-ERVUE3RX.js";
 import {
   CommonModule,
   DomAdapter,
@@ -8,7 +8,7 @@ import {
   getDOM,
   isPlatformServer,
   setRootDomAdapter
-} from "./chunk-WXBPWNCB.js";
+} from "./chunk-WYH5MQPE.js";
 import {
   XhrFactory,
   parseCookieValue
@@ -19,14 +19,8 @@ import {
   ApplicationRef,
   CSP_NONCE,
   Console,
-  DOCUMENT,
-  ENVIRONMENT_INITIALIZER,
-  ErrorHandler,
-  INJECTOR_SCOPE,
   Inject,
   Injectable,
-  InjectionToken,
-  Injector,
   NgModule,
   NgZone,
   Optional,
@@ -34,7 +28,6 @@ import {
   PLATFORM_INITIALIZER,
   RendererFactory2,
   RendererStyleFlags2,
-  RuntimeError,
   SecurityContext,
   TESTABILITY,
   TESTABILITY_GETTER,
@@ -43,10 +36,6 @@ import {
   TracingService,
   Version,
   ViewEncapsulation,
-  XSS_SECURITY_URL,
-  ZONELESS_ENABLED,
-  __spreadValues,
-  _global,
   _sanitizeHtml,
   _sanitizeUrl,
   allowSanitizationBypassAndThrow,
@@ -56,11 +45,7 @@ import {
   bypassSanitizationTrustStyle,
   bypassSanitizationTrustUrl,
   createPlatformFactory,
-  formatRuntimeError,
-  forwardRef,
-  inject,
   internalCreateApplication,
-  makeEnvironmentProviders,
   platformCore,
   setClassMetadata,
   setDocument,
@@ -69,11 +54,30 @@ import {
   withEventReplay,
   withI18nSupport,
   withIncrementalHydration,
+  ɵɵdefineNgModule
+} from "./chunk-XUEDRGQN.js";
+import {
+  DOCUMENT,
+  ENVIRONMENT_INITIALIZER,
+  ErrorHandler,
+  INJECTOR_SCOPE,
+  InjectionToken,
+  Injector,
+  RuntimeError,
+  XSS_SECURITY_URL,
+  ZONELESS_ENABLED,
+  _global,
+  formatRuntimeError,
+  forwardRef,
+  inject,
+  makeEnvironmentProviders,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
-  ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-2254AOFZ.js";
+} from "./chunk-JORA23O4.js";
+import {
+  __spreadValues
+} from "./chunk-SESUV4G6.js";
 
 // node_modules/@angular/platform-browser/fesm2022/dom_renderer-Frqw9gM5.mjs
 var EVENT_MANAGER_PLUGINS = new InjectionToken(ngDevMode ? "EventManagerPlugins" : "");
@@ -2012,4 +2016,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-EVPI6HWH.js.map
+//# sourceMappingURL=chunk-KB7J74FO.js.map

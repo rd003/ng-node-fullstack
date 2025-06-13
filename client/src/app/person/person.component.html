@@ -11,10 +11,10 @@
             @if(f.firstName.touched || (f.firstName.dirty && f.firstName.invalid))
             {
             <span class="text-danger">
-                @if(f.firstName?.errors?.['required']){
+                @if(f.firstName.errors?.['required']){
                 FirstName is required
                 }
-                @if (f.firstName?.errors?.['maxlength']) {
+                @if (f.firstName.errors?.['maxlength']) {
                 Maximum 30 characters allowed
                 }
             </span>
@@ -24,10 +24,10 @@
             <input type="text" class="form-control" placeholder="Last Name" formControlName="lastName" required>
             @if(f.lastName.touched || (f.lastName.dirty && f.lastName.invalid)){
             <span class="text-danger">
-                @if(f.lastName?.errors?.['required']){
+                @if(f.lastName.errors?.['required']){
                 LastName is required
                 }
-                @if (f.lastName?.errors?.['maxlength']) {
+                @if (f.lastName.errors?.['maxlength']) {
                 Maximum 30 characters allowed
                 }
             </span>

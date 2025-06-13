@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { environment } from "../../environments/environment";
+import { environment } from "../../environments/environment.development";
 import { HttpClient } from "@angular/common/http";
 import { TokenModel } from "./models/token.model";
 import { LoginModel } from "./models/login.model";
@@ -11,19 +11,21 @@ export class UserService {
     private readonly http = inject(HttpClient);
 
     login(loginData: LoginModel) {
-        this.http.post<TokenModel>(this.apiUrl + "/login", loginData);
+        return this.http.post<TokenModel>(this.apiUrl + "/login", loginData, {
+            withCredentials: true
+        });
     }
 
     signup(signupData: SignupModel) {
-        this.http.post<void>(this.apiUrl + "/signup", signupData);
+        return this.http.post<void>(this.apiUrl + "/signup", signupData);
     }
 
     refreshToken() {
         // we don't to pass {accessToken,refreshToken}. It will be passed through cookies
-        this.http.post<TokenModel>(this.apiUrl + "/refresh" + "/refreshToken", null);
+        return this.http.post<TokenModel>(this.apiUrl + "/refresh" + "/refreshToken", null);
     }
 
     logout(accessToken: string) {
-        this.http.post<void>(this.apiUrl + "/signup", { accessToken });
+        return this.http.post<void>(this.apiUrl + "/logout", { accessToken });
     }
 }
