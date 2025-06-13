@@ -5,7 +5,9 @@ class PersonController {
     getAllPeople = async (req, res) => {
         try {
             const [people] = await Sequelize.query("EXEC spGetPeople");
-            res.json(people);
+            // Just converting every property in camelCase, because I have messed up in front end
+            const updatedPersonList = people.map(p => ({ id: p.Id, firstName: p.FirstName, lastName: p.LastName }));
+            res.json(updatedPersonList);
         }
         catch (error) {
             console.log(error);
@@ -29,7 +31,13 @@ class PersonController {
                     message: "Person does not found"
                 })
             }
-            res.json(result[0]);
+
+            const createdPerson = {
+                id: result[0].Id,
+                firstName: result[0].FirstName,
+                lastName: result[0].LastName
+            }
+            res.json(createdPerson);
         }
         catch (error) {
             console.log(error);
@@ -77,6 +85,7 @@ class PersonController {
                 replacements: [req.params.id, req.body.firstName, req.body.lastName],
                 type: Sequelize.QueryTypes.SELECT
             });
+            // Just converting every property in camelCase, because I have messed up in front end
             res.status(204).send();
         }
         catch (error) {

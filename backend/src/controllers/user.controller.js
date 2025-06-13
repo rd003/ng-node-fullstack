@@ -207,8 +207,6 @@ const refreshAccessToken = async (req, res) => {
             });
         }
 
-        console.log(`db date: ${user.RefreshTokenExpiry}, currentDate: ${Date.now()}`);
-
         // else generate new access token and refresh token
 
         const { accessToken, refreshToken } = generateTokens({

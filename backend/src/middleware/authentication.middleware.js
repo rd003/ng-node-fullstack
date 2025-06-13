@@ -3,7 +3,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const authenticateToken = (req, res, next) => {
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-    console.log(`======> jwt: ${token}`);
+    // console.log(`======> jwt: ${token}`);
 
     if (!token) {
         return res.status(401).json({
@@ -19,7 +19,7 @@ const authenticateToken = (req, res, next) => {
                 message: 'Invalid or expired token'
             });
         }
-        console.log(`=====> JWT verified =>  req.user : ${JSON.stringify(user)} `);
+        // console.log(`=====> JWT verified =>  req.user : ${JSON.stringify(user)} `);
         req.user = user;
     })
     next();

@@ -1,11 +1,11 @@
 @base_address = http://localhost:3000/api/people
-@jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk2NTIzOTEsImV4cCI6MTc0OTY1MjQ1MX0.1J7aYNnb3QKwiVU98LZ4N35cTYome5fIBNv5JNWGjjI
+@jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk4MTk3ODgsImV4cCI6MTc0OTgyMDY4OH0.VOz1KIkkKUUid_PEtHMh1VQGWOEealzpedaIR1G7INU
 
 GET {{base_address}}
 Authorization: Bearer {{jwt}}
 
 ###
-GET {{base_address}}/4
+GET {{base_address}}/2
 Authorization: Bearer {{jwt}}
 
 ###
