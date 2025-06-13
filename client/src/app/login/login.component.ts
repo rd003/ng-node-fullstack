@@ -12,10 +12,24 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
         <div class="mb-3">
           <label for="username" class="form-label" >Username</label>
           <input formControlName="username" class="form-control" placeholder="Enter username" required />
+
+          @if(f.username.touched || (f.username.dirty && f.username.invalid))
+          {
+             @if(f.username.errors?.['required']){
+                   <span>Please fill the username</span>
+             }
+          }
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
           <input formControlName="password" type="password" class="form-control" id="password" placeholder="Password" required />
+
+          @if(f.password.touched || (f.password.dirty && f.password.invalid))
+          {
+             @if(f.password.errors?.['required']){
+                   <span>Please fill the password</span>
+             }
+          }
         </div>
         <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">Login</button>
       </form>
@@ -43,6 +57,6 @@ export class LoginComponent {
   })
 
   onSubmit() {
-
+    console.log(this.loginForm.value);
   }
 }
