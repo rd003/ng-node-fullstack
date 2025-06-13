@@ -1,5 +1,15 @@
-import { Component, inject } from "@angular/core";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Component, DestroyRef, inject, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { PersonService } from "./person.service";
+import { PersonModel } from "./person.model";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+
+export interface PeopleState {
+    people: readonly PersonModel[];
+    loading: boolean;
+    error: HttpErrorResponse | null;
+}
 
 @Component({
     selector: 'app-person',
@@ -8,7 +18,18 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
     templateUrl: 'person.component.html',
     styles: [``]
 })
-export class PersonComponent {
+export class PersonComponent implements OnInit {
+
+    private readonly personService = inject(PersonService);
+    private readonly destroyRef = inject(DestroyRef);
+
+    private readonly _initState: PeopleState = {
+        people: [],
+        loading: false,
+        error: null
+    }
+    state = signal(this._initState);
+
     fb = inject(FormBuilder);
 
     get f() {
@@ -35,5 +56,21 @@ export class PersonComponent {
         if (window.confirm('Are your sure to delete?')) {
 
         }
+    }
+    private setLoading(val: boolean) {
+        this.state.update(() => ({ ...this.state(), loading: val }));
+    }
+
+    ngOnInit(): void {
+        this.setLoading(true);
+        this.personService.getAll().pipe(
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+            next: (people) => this.state.update(() => ({ people, loading: false, error: null })),
+            error: (error) => {
+                console.log(error);
+                this.state.update(() => ({ ...this.state(), loading: false, error }));
+            }
+        })
     }
 }

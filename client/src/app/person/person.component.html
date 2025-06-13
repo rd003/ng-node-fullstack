@@ -1,4 +1,12 @@
 <h3>People</h3>
+{{state().loading}}
+@if(state().loading){
+Loading....
+}
+
+@if(state().error){
+<span class="alert alert-danger">Something went wrong!</span>
+}
 
 <!-- form -->
 <div class="mb-3">
@@ -55,14 +63,14 @@
         </thead>
 
         <tbody>
-            @for(i of [1,2,3,4]; track i)
+            @for(person of state().people; track person.id)
             {
             <tr>
-                <td>FirstName {{i}}</td>
-                <td>LastName {{i}}</td>
+                <td>FirstName {{person.firstName}}</td>
+                <td>LastName {{person.lastName}}</td>
                 <td style="display: flex; gap:5px">
-                    <a class="btn btn-info" (click)="onEdit($event)">✏️</a>
-                    <a class="btn btn-danger" (click)="onDelete($event)">🗑️</a>
+                    <a class="btn btn-info" (click)="onEdit(person)">✏️</a>
+                    <a class="btn btn-danger" (click)="onDelete(person)">🗑️</a>
                 </td>
             </tr>
             }

@@ -11,9 +11,7 @@ export class UserService {
     private readonly http = inject(HttpClient);
 
     login(loginData: LoginModel) {
-        return this.http.post<TokenModel>(this.apiUrl + "/login", loginData, {
-            withCredentials: true
-        });
+        return this.http.post<TokenModel>(this.apiUrl + "/login", loginData);
     }
 
     signup(signupData: SignupModel) {
