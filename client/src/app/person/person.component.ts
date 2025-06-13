@@ -45,11 +45,11 @@ export class PersonComponent implements OnInit {
     onSubmit() {
         const person = this.personForm.value as PersonModel;
         if (!person) return;
-        // TODO: in add person, we are also passing 'id' in body. Either exclude it or create a new model for it
         this.setLoading(true);
         person.id > 0
             ? this.updatePerson(person)
             : this.addPerson(person)
+        this.personForm.reset();
     }
 
     private addPerson(person: PersonModel) {
@@ -61,7 +61,7 @@ export class PersonComponent implements OnInit {
                 this.state.update(() => (
                     {
                         ...this.state(),
-                        people: { ...this.state().people, person },
+                        people: [...this.state().people, person],
                         loading: false
                     }));
             },
@@ -79,7 +79,7 @@ export class PersonComponent implements OnInit {
             next: () => this.state.update(() => (
                 {
                     ...this.state(),
-                    people: { ...this.state().people.map(a => a.id === person.id ? person : a) },
+                    people: [...this.state().people.map(a => a.id === person.id ? person : a)],
                     loading: false
                 })),
             error: (error) => {
@@ -103,7 +103,7 @@ export class PersonComponent implements OnInit {
                 next: () => this.state.update(() => (
                     {
                         ...this.state(),
-                        people: { ...this.state().people.filter(a => a.id !== person.id) },
+                        people: [...this.state().people.filter(a => a.id !== person.id)],
                         loading: false
                     })),
                 error: (error) => {
@@ -127,9 +127,6 @@ export class PersonComponent implements OnInit {
             takeUntilDestroyed(this.destroyRef)
         ).subscribe({
             next: (people) => {
-                // TODO: object in list is :
-                // { Id: 2, FirstName: 'Mahendra', LastName: 'Singh' }
-                // But their attribute should be in camel case
                 this.state.update(() => ({ people, loading: false, error: null }))
             }
             ,

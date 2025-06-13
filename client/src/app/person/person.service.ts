@@ -21,10 +21,12 @@ export class PersonService {
     }
 
     update(person: PersonModel) {
-        return this.http.put<void>(`${this.apiUrl}/${person.id}`, person);
+        const { id, ...personWithoutId } = person;
+        return this.http.put<void>(`${this.apiUrl}/${person.id}`, personWithoutId);
     }
 
     add(person: PersonModel) {
-        return this.http.post<PersonModel>(this.apiUrl, person);
+        const { id, ...personWithoutId } = person;
+        return this.http.post<PersonModel>(this.apiUrl, personWithoutId);
     }
 }
