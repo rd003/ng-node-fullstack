@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { TokenModel } from "./models/token.model";
 import { LoginModel } from "./models/login.model";
 import { SignupModel } from "./models/signup.model";
+import { MyInfoModel } from "./models/my-info.model";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -12,6 +13,10 @@ export class UserService {
 
     login(loginData: LoginModel) {
         return this.http.post<TokenModel>(this.apiUrl + "/login", loginData);
+    }
+
+    getUserInfo() {
+        return this.http.get<MyInfoModel>(this.apiUrl + "/me");
     }
 
     signup(signupData: SignupModel) {

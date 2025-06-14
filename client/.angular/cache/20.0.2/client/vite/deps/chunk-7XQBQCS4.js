@@ -42,7 +42,7 @@ import {
   ɵɵdirectiveInject,
   ɵɵinjectAttribute,
   ɵɵstyleProp
-} from "./chunk-XOEYHWOV.js";
+} from "./chunk-XUEDRGQN.js";
 import {
   DOCUMENT,
   DestroyRef,
@@ -57,7 +57,7 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
   ɵɵinject
-} from "./chunk-2FVOLFJF.js";
+} from "./chunk-JORA23O4.js";
 import {
   Subject,
   __spreadProps,
@@ -3675,6 +3675,9 @@ var PlatformNavigation = class _PlatformNavigation {
 // node_modules/@angular/common/fesm2022/common.mjs
 var PLATFORM_BROWSER_ID = "browser";
 var PLATFORM_SERVER_ID = "server";
+function isPlatformBrowser(platformId) {
+  return platformId === PLATFORM_BROWSER_ID;
+}
 function isPlatformServer(platformId) {
   return platformId === PLATFORM_SERVER_ID;
 }
@@ -4952,6 +4955,7 @@ export {
   HashLocationStrategy,
   CommonModule,
   PLATFORM_BROWSER_ID,
+  isPlatformBrowser,
   isPlatformServer,
   ViewportScroller
 };
@@ -4967,4 +4971,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-JPMLAPLI.js.map
+//# sourceMappingURL=chunk-7XQBQCS4.js.map

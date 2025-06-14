@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LayoutComponent } from './shared/layout/layout.component';
+import { UserStore } from './shared/user.store';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, LayoutComponent],
   template: `
   <div class="app-container">
-    @if(isLoggedIn){
+    @if(username().length>0){
+      <!-- user is logged in -->
       <app-layout></app-layout>
     }
     @else{
@@ -43,6 +45,16 @@ import { LayoutComponent } from './shared/layout/layout.component';
     `],
 })
 export class App {
-  isLoggedIn = true;
+  // Since service is registered in root (providedIn:root), it will share the instance globally
+  private readonly userStore = inject(UserStore);
+  username = this.userStore.username;
 
+  constructor() {
+    effect(() => {
+      const currentUsername = this.username();
+      if (currentUsername) {
+        console.log("username loaded:", currentUsername);
+      }
+    }); // why "username <empty string>"
+  }
 }
