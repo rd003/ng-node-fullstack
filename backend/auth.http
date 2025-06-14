@@ -1,4 +1,5 @@
 @base_address = http://localhost:3000/api/auth 
+@jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk4ODI1MTksImV4cCI6MTc0OTg4MzQxOX0.JImU0IdDWuQXoyzf33xadhnpnOOiDJziRZUGgYc4yd0
 
 POST {{base_address}}/signup 
 Content-Type : application/json
@@ -18,8 +19,12 @@ Content-Type : application/json
 }
 
 ###
+GET {{base_address}}/me
+Authorization: Bearer {{jwt}}
+
+###
 POST {{base_address}}/logout
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk3MDc4MTgsImV4cCI6MTc0OTcwNzg3OH0.e7RFzaMuGSBg1dPt2rLR7dRo29N1CgtyvahavYJOevA
+Authorization: Bearer {{jwt}}
 
 ### Refresh token
 POST {{base_address}}/refresh

@@ -94,17 +94,26 @@ const login = async (req, res) => {
         user.save();
 
         // set token in cookie
-        const cookieOptions = {
+        const jwtCookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // set true for production
-            maxAge: convertToMilliseconds(JWT_EXPIRES_IN)
+            maxAge: convertToMilliseconds(JWT_EXPIRES_IN),
+            sameSite: 'strict'
+        }
+
+        const refreshTokenCookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // set true for production
+            maxAge: convertToMilliseconds(REFRESH_EXPIRY),
+            path: '/api/auth/refresh', // can only sent from this endpoint
+            sameSite: 'strict'
         }
 
         // since these api can be access by mobile app too, where cookies don't work, so we need to send tokens as a response too.
         res
             .status(200)
-            .cookie("accessToken", accessToken, cookieOptions)
-            .cookie("refreshToken", refreshToken, cookieOptions)
+            .cookie("accessToken", accessToken, jwtCookieOptions)
+            .cookie("refreshToken", refreshToken, refreshTokenCookieOptions)
             .json({
                 "accessToken": accessToken,
                 "refreshToken": refreshToken
@@ -138,14 +147,9 @@ const logout = async (req, res) => {
         user.RefreshTokenExpiry = null;
         user.save();
 
-        const cookieOptions = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // set true for production
-        }
-
         res.status(200)
-            .clearCookie("accessToken", cookieOptions)
-            .clearCookie("refreshToken", cookieOptions)
+            .clearCookie("accessToken")
+            .clearCookie("refreshToken", { path: '/api/auth/refresh' })
             .json({
                 "statusCode": 200,
                 "message": "You are successfully logged out"
@@ -215,15 +219,25 @@ const refreshAccessToken = async (req, res) => {
         });
 
         // set tokens in cookie and also return them in response
-        const cookieOptions = {
+        const jwtCookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // set true for production
-            maxAge: convertToMilliseconds(JWT_EXPIRES_IN)
+            maxAge: convertToMilliseconds(JWT_EXPIRES_IN),
+            sameSite: 'strict'
         }
+
+        const refreshTokenCookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // set true for production
+            maxAge: convertToMilliseconds(REFRESH_EXPIRY),
+            path: '/api/auth/refresh', // can only sent from this endpoint
+            sameSite: 'strict'
+        }
+
         res
             .status(200)
-            .cookie("accessToken", accessToken, cookieOptions)
-            .cookie("refreshToken", refreshToken, cookieOptions)
+            .cookie("accessToken", accessToken, jwtCookieOptions)
+            .cookie("refreshToken", refreshToken, refreshTokenCookieOptions)
             .json({
                 "accessToken": accessToken,
                 "refreshToken": refreshToken
@@ -237,9 +251,39 @@ const refreshAccessToken = async (req, res) => {
     }
 }
 
+const getUserInfo = async (req, res) => {
+    try {
+        const username = req.user.username;
+        const user = await Users.findOne({
+            attributes: [['Email', 'email'], ['Role', 'role']],
+            where: {
+                Email: username
+            }
+        });
+
+        // It is unlikely to happen
+        if (!user) {
+            return res.status(404).json({
+                statusCode: 404,
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json(user);
+    }
+    catch (error) {
+        console.log(`❌=====>${error}`);
+        res.status(500).json({
+            statusCode: 500,
+            message: "Internal server error"
+        });
+    }
+}
+
 module.exports = {
     signup,
     login,
     logout,
-    refreshAccessToken
+    refreshAccessToken,
+    getUserInfo
 };
