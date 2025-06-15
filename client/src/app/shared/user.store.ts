@@ -12,13 +12,18 @@ export class UserStore {
         role: ''
     };
 
+    private readonly _isLoading = signal(true);
+
     private readonly state = signal(this._initialState);
 
     username = computed(() => this.state().username);
     role = computed(() => this.state().role);
+    isLoading = computed(() => this._isLoading());
+    isLoaded = computed(() => !this._isLoading());
 
     logout() {
         this.state.set(this._initialState);
+        this._isLoading.set(false);
     }
 
     constructor() {
@@ -27,12 +32,13 @@ export class UserStore {
                 if (!myInfo) return;
                 const { username, role } = myInfo;
                 this.state.set({ username, role });
-                // console.log(this.username()); // john@example.com
-                // console.log(this.role()); // admin
+
+                console.log('UserStore loaded:', this.username()); // Debug log
             },
             error: (error) => {
-                console.log(error);
-            }
+                console.log('UserStore error:', error);
+            },
+            complete: () => this._isLoading.set(false)
         });
     }
 }

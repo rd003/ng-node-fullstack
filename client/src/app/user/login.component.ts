@@ -116,10 +116,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     const returnUrl = this.route.snapshot.paramMap.get('returnUrl') || 'dashboard';
-    console.log(`return url: ${returnUrl}`); // TODO: check what return url is coming
+    //console.log(`return url: ${returnUrl}`);
     if (this.userStore.username()) {
-      console.log("reached")
-      this.router.navigate([`/${returnUrl}`]);  // TODO: navigating to route :http://localhost:4200/login?returnUrl=%2Fdashboard
+      this.router.navigate([`/${returnUrl}`]);  // TODO: why is it navigating to route :http://localhost:4200/login?returnUrl=%2Fdashboard while value of returnUrl is 'dashboard' without single quot
     }
   }
 
