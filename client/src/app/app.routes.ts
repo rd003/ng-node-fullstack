@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './user/login.component';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
     {
         path: 'dashboard',
-        loadComponent: async () => (await import("./dashboard.component")).DashboardComponent
+        loadComponent: async () => (await import("./dashboard.component")).DashboardComponent,
+        canActivate: [authGuard]
     },
     {
         path: 'login',
@@ -12,7 +14,8 @@ export const routes: Routes = [
     },
     {
         path: 'people',
-        loadComponent: async () => (await import("./person/person.component")).PersonComponent
+        loadComponent: async () => (await import("./person/person.component")).PersonComponent,
+        canActivate: [authGuard]
     },
     {
         path: '',

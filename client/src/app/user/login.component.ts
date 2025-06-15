@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TokenModel } from './models/token.model';
 import { tap } from 'rxjs';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserStore } from '../shared/user.store';
 
 @Component({
@@ -72,6 +72,7 @@ export class LoginComponent implements OnInit {
   userService = inject(UserService);
   destroyRef = inject(DestroyRef);
   router = inject(Router);
+  route = inject(ActivatedRoute);
   userStore = inject(UserStore);
 
   loading = signal(false);
@@ -114,9 +115,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // if already login, then return to dashboard
+    const returnUrl = this.route.snapshot.paramMap.get('returnUrl') || 'dashboard';
+
     if (this.userStore.username()) {
-      this.router.navigate([`/dashboard`]);
+      this.router.navigate([returnUrl]);  // TODO: navigating to route :http://localhost:4200/login?returnUrl=%2Fdashboard
     }
   }
 
