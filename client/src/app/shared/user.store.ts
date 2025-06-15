@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from "@angular/core";
+import { computed, DestroyRef, inject, Injectable, signal } from "@angular/core";
 import { UserService } from "../user/user.service";
 import { MyInfoModel } from "../user/models/my-info.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 @Injectable({ providedIn: 'root' })
 export class UserStore {
     private readonly userService = inject(UserService);
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly _initialState: MyInfoModel = {
         username: '',
@@ -26,8 +27,8 @@ export class UserStore {
         this._isLoading.set(false);
     }
 
-    constructor() {
-        this.userService.getUserInfo().pipe(takeUntilDestroyed()).subscribe({
+    loadUserStore() {
+        this.userService.getUserInfo().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (myInfo) => {
                 if (!myInfo) return;
                 const { username, role } = myInfo;
@@ -40,5 +41,9 @@ export class UserStore {
             },
             complete: () => this._isLoading.set(false)
         });
+    }
+
+    constructor() {
+        this.loadUserStore();
     }
 }

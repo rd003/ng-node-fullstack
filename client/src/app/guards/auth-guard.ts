@@ -8,18 +8,17 @@ export const authGuard: CanActivateFn = (route, state) => {
   const userStore = inject(UserStore);
   const router = inject(Router);
 
-  //console.log('Auth guard - isLoading:', userStore.isLoading());
-  //console.log('Auth guard - username:', userStore.username());
-
   // If still loading, wait for it to complete
   if (userStore.isLoading()) {
+
     return toObservable(userStore.isLoaded).pipe(
       filter(loaded => loaded), // Wait until loading is complete
       take(1),
       map(() => {
-        // console.log('Auth guard - after loading - username:', userStore.username());
+        console.log('Auth guard - after loading - username:', userStore.username());
         if (!userStore.username()) {
-          console.log("not logged in, visited route: " + state.url);
+          console.log("ASYNC: not logged in, visited route: " + state.url);
+          console.log("ASYNC: navigating to login with returnUrl:", state.url);
           router.navigate(['/login'], {
             queryParams: { returnUrl: state.url }
           });
@@ -32,13 +31,12 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   // If not loading, check immediately
   if (!userStore.username()) {
-    // console.log("not logged in, visited route: " + state.url);
     router.navigate(['/login'], {
       queryParams: { returnUrl: state.url }
     });
     return false;
   }
 
+  console.log('Auth guard - user is authenticated, allowing access');
   return true;
-
 };

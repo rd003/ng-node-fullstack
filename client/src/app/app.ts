@@ -49,6 +49,7 @@ export class App {
   private readonly userStore = inject(UserStore);
   username = this.userStore.username;
 
+  // it just for solving timing issue, signal is not being updated for reaching at this class
   constructor() {
     effect(() => {
       const currentUsername = this.username();

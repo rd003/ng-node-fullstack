@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, WritableSignal, signal, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, WritableSignal, signal, OnInit, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from './user.service';
 import { LoginModel } from './models/login.model';
@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TokenModel } from './models/token.model';
 import { tap } from 'rxjs';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserStore } from '../shared/user.store';
 
 @Component({
@@ -68,13 +68,14 @@ import { UserStore } from '../shared/user.store';
   ]
 })
 export class LoginComponent implements OnInit {
-  fb = inject(FormBuilder);
-  userService = inject(UserService);
-  destroyRef = inject(DestroyRef);
-  router = inject(Router);
-  route = inject(ActivatedRoute);
-  userStore = inject(UserStore);
+  private readonly fb = inject(FormBuilder);
+  private readonly userService = inject(UserService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
+  //private readonly route = inject(ActivatedRoute);
+  private readonly userStore = inject(UserStore);
 
+  username = this.userStore.username;
   loading = signal(false);
   error: WritableSignal<HttpErrorResponse | null> = signal(null);
   message = signal("");
@@ -100,6 +101,7 @@ export class LoginComponent implements OnInit {
       tap(() => this.loading.update(() => true)),
       takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (token: TokenModel) => {
+          this.userStore.loadUserStore();
           this.message.update(() => "Logged in successfull");
           this.loginForm.reset();
           this.router.navigate(['/dashboard']);
@@ -115,11 +117,18 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const returnUrl = this.route.snapshot.paramMap.get('returnUrl') || 'dashboard';
-    //console.log(`return url: ${returnUrl}`);
+    // const returnUrl = this.route.snapshot.queryParams['returnUrl'];
     if (this.userStore.username()) {
-      this.router.navigate([`/${returnUrl}`]);  // TODO: why is it navigating to route :http://localhost:4200/login?returnUrl=%2Fdashboard while value of returnUrl is 'dashboard' without single quot
+      this.router.navigate(['/dashboard']);
     }
   }
 
+  // it just for solving timing issue, signal is not being updated for reaching at this class
+  // constructor() {
+  //   effect(() => {
+  //     const currentUsername = this.username();
+  //     if (currentUsername) {
+  //     }
+  //   });
+  // }
 }
