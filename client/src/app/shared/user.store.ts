@@ -17,6 +17,10 @@ export class UserStore {
     username = computed(() => this.state().username);
     role = computed(() => this.state().role);
 
+    logout() {
+        this.state.set(this._initialState);
+    }
+
     constructor() {
         this.userService.getUserInfo().pipe(takeUntilDestroyed()).subscribe({
             next: (myInfo) => {

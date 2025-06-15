@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { UserService } from '../../user/user.service';
+import { UserStore } from '../user.store';
 
 @Component({
   selector: 'app-layout',
@@ -11,7 +13,7 @@ import { RouterModule } from '@angular/router';
       <h5 class="text-white">Admin Panel</h5>
       <a href="/dashboard">Dashboard</a>
       <a href="/people">People</a>
-      <a href="/logout">Logout</a>
+      <a (click)="logout()" style="cursor:pointer">Logout</a>
     </nav>
 
     <!-- Main Content -->
@@ -23,5 +25,21 @@ import { RouterModule } from '@angular/router';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
+  private readonly userService = inject(UserService);
+  private readonly router = inject(Router);
+  private readonly userStore = inject(UserStore);
 
+  logout() {
+    this.userService.logout().subscribe(
+      {
+        next: () => {
+          this.userStore.logout();
+          this.router.navigate([`/login`]);
+
+        },
+        error: (error) => console.log(error)
+      }
+    );
+
+  }
 }

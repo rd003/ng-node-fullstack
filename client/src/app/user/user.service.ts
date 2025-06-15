@@ -5,6 +5,7 @@ import { TokenModel } from "./models/token.model";
 import { LoginModel } from "./models/login.model";
 import { SignupModel } from "./models/signup.model";
 import { MyInfoModel } from "./models/my-info.model";
+import { map } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -20,7 +21,7 @@ export class UserService {
     }
 
     signup(signupData: SignupModel) {
-        return this.http.post<void>(this.apiUrl + "/signup", signupData);
+        return this.http.post<void>(this.apiUrl + "/signup", signupData).pipe(map(() => true));
     }
 
     refreshToken() {
@@ -28,7 +29,7 @@ export class UserService {
         return this.http.post<TokenModel>(this.apiUrl + "/refresh" + "/refreshToken", null);
     }
 
-    logout(accessToken: string) {
-        return this.http.post<void>(this.apiUrl + "/logout", { accessToken });
+    logout() {
+        return this.http.post<void>(this.apiUrl + "/logout", null);
     }
 }

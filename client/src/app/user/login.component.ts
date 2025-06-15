@@ -118,7 +118,8 @@ export class LoginComponent implements OnInit {
     const returnUrl = this.route.snapshot.paramMap.get('returnUrl') || 'dashboard';
     console.log(`return url: ${returnUrl}`); // TODO: check what return url is coming
     if (this.userStore.username()) {
-      this.router.navigate([returnUrl]);  // TODO: navigating to route :http://localhost:4200/login?returnUrl=%2Fdashboard
+      console.log("reached")
+      this.router.navigate([`/${returnUrl}`]);  // TODO: navigating to route :http://localhost:4200/login?returnUrl=%2Fdashboard
     }
   }
 
