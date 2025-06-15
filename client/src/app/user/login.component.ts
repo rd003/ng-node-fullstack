@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, WritableSignal, signal } from '@angular/core';
+import { Component, DestroyRef, inject, WritableSignal, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from './user.service';
 import { LoginModel } from './models/login.model';
@@ -7,6 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TokenModel } from './models/token.model';
 import { tap } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
+import { UserStore } from '../shared/user.store';
 
 @Component({
   selector: 'app-login',
@@ -66,11 +67,12 @@ import { Router, RouterModule } from '@angular/router';
     `
   ]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   fb = inject(FormBuilder);
   userService = inject(UserService);
   destroyRef = inject(DestroyRef);
   router = inject(Router);
+  userStore = inject(UserStore);
 
   loading = signal(false);
   error: WritableSignal<HttpErrorResponse | null> = signal(null);
@@ -110,4 +112,12 @@ export class LoginComponent {
         }
       });
   }
+
+  ngOnInit(): void {
+    // if already login, then return to dashboard
+    if (this.userStore.username()) {
+      this.router.navigate([`/dashboard`]);
+    }
+  }
+
 }

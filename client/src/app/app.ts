@@ -53,8 +53,7 @@ export class App {
     effect(() => {
       const currentUsername = this.username();
       if (currentUsername) {
-        console.log("username loaded:", currentUsername);
       }
-    }); // why "username <empty string>"
+    });
   }
 }
