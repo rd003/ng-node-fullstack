@@ -44,6 +44,9 @@ export class UserStore {
     }
 
     constructor() {
-        this.loadUserStore();
+        // Add a small delay to ensure all dependencies are properly initialized
+        setTimeout(() => {
+            this.loadUserStore();
+        }, 0);
     }
 }

@@ -37,6 +37,6 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  console.log('Auth guard - user is authenticated, allowing access');
+  // console.log('Auth guard - user is authenticated, allowing access');
   return true;
 };

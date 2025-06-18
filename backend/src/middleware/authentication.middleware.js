@@ -3,7 +3,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const authenticateToken = (req, res, next) => {
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-    // console.log(`======> jwt: ${token}`);
+
+    //console.log('auth-middleware======> Cookies received:', JSON.stringify(req.cookies));
 
     if (!token) {
         return res.status(401).json({

@@ -22,12 +22,12 @@ function userModel(sequelize) {
             allowNull: false
         },
         RefreshToken: {
-            type: DataTypes.STRING(200),
+            type: DataTypes.STRING(400),
             allowNull: true
         },
         RefreshTokenExpiry: {
             type: DataTypes.DATE,
-            allowNull: true
+            allow: true
         }
     };
 

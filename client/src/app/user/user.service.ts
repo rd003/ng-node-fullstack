@@ -26,7 +26,7 @@ export class UserService {
 
     refreshToken() {
         // we don't to pass {accessToken,refreshToken}. It will be passed through cookies
-        return this.http.post<TokenModel>(this.apiUrl + "/refresh" + "/refreshToken", null);
+        return this.http.post<TokenModel>(this.apiUrl + "/refresh", null);
     }
 
     logout() {
